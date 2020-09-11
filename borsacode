@@ -1,0 +1,72 @@
+import pandas as pd
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import requests
+import urllib3
+
+
+
+
+option = webdriver.ChromeOptions()
+
+browser = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=option)
+browser.set_window_size(444,444)
+
+
+
+arr_urls = []
+
+currentitem = 2
+
+currentpage = 1
+while currentpage < 4:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?k=news_italia&p=" + str(currentpage))
+
+    while currentitem < 17:
+        url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
+        print(url)
+        arr_urls.append(url)
+        currentitem += 1
+
+    currentpage += 1
+    currentitem = 2
+    time.sleep(3)
+
+current_url_index = 1
+for x in arr_urls:  # urlleri dolaş
+
+    browser.get(x)
+    print("\n\npageNUM: " + x)
+    if(str(x).__contains__("-video-")):
+        print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text)
+        print("*")
+        print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
+        print("*")
+        print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text)
+        print("Current PAGE: " + str(currentpage) + " : " + str(current_url_index))
+        current_url_index += 1
+        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
+    else:
+     print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text)
+     print("*")
+     print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
+     print("*")
+     print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text)
+     print("Current PAGE: " + str(currentpage) +" : " +str(current_url_index))
+     current_url_index += 1
+     time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
+
+
+
+
