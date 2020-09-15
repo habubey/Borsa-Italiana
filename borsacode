@@ -14,7 +14,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
 import urllib3
-
+import zipfile
 
 
 
@@ -47,26 +47,41 @@ current_url_index = 1
 for x in arr_urls:  # urlleri dolaş
 
     browser.get(x)
-    print("\n\npageNUM: " + x)
+    print("\n\npageURL: " + x)
     if(str(x).__contains__("-video-")):
+        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
         print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text)
         print("*")
         print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
         print("*")
         print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text)
+        print("*")
+        print("Stock Name: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text)
+        print("*")
+        src = browser.page_source
+        ind = src.find('data-tlb-value')
+        ind2 = src.find('\"', ind + 17)
+        print("Stock Index: " + src[ind + 16:ind2])
+        print("*")
         print("Current PAGE: " + str(currentpage) + " : " + str(current_url_index))
         current_url_index += 1
-        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
     else:
-     print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text)
-     print("*")
-     print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
-     print("*")
-     print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text)
-     print("Current PAGE: " + str(currentpage) +" : " +str(current_url_index))
-     current_url_index += 1
-     time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
-
+        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
+        print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text)
+        print("*")
+        print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
+        print("*")
+        print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text)
+        print("*")
+        print("Stock Name: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text)
+        print("*")
+        src = browser.page_source
+        ind = src.find('data-tlb-value')
+        ind2 = src.find('\"', ind + 17)
+        print("Stock Index: " + src[ind + 16:ind2])
+        print("*")
+        print("Current PAGE: " + str(currentpage) +" : " +str(current_url_index))
+        current_url_index += 1
 
 
 
