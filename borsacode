@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 import requests
 import urllib3
 import zipfile
-
+import csv
 
 
 option = webdriver.ChromeOptions()
@@ -26,6 +26,12 @@ browser.set_window_size(444,444)
 
 
 arr_urls = []
+arr_titles = []
+arr_dates = []
+arr_contents = []
+arr_stock_names = []
+arr_stock_indexes = []
+arr_page_nums = []
 
 currentitem = 2
 
@@ -49,39 +55,87 @@ for x in arr_urls:  # urlleri dolaş
     browser.get(x)
     print("\n\npageURL: " + x)
     if(str(x).__contains__("-video-")):
-        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
-        print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text)
+        time.sleep(3)
+        title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text
+        print("Title: " + title)
         print("*")
-        print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
+        date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
+        print("Date: " + date)
         print("*")
-        print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text)
+        content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text
+        print("Content: " + content)
         print("*")
-        print("Stock Name: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text)
-        print("*")
-        src = browser.page_source
-        ind = src.find('data-tlb-value')
-        ind2 = src.find('\"', ind + 17)
-        print("Stock Index: " + src[ind + 16:ind2])
+
+        stock_name = ""
+        stock_index = ""
+        try:
+            stock_name = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text
+            print("Stock Name: " + stock_name)
+            print("*")
+            src = browser.page_source
+            ind = src.find('data-tlb-value')
+            ind2 = src.find('\"', ind + 17)
+            stock_index = src[ind + 16:ind2]
+            print("Stock Index: " + stock_index)
+        except:
+            print("no stock info found")
+
         print("*")
         print("Current PAGE: " + str(currentpage) + " : " + str(current_url_index))
+        arr_titles.append(str(title))
+        arr_dates.append(str(date))
+        arr_contents.append(str(content))
+        arr_stock_names.append(str(stock_name))
+        arr_stock_indexes.append(str(stock_index))
+        arr_page_nums.append(str(currentpage))
         current_url_index += 1
     else:
-        time.sleep(3)  # bu süre içinde sayfanın yükleneceğini düşünüyoruz
-        print("Title: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text)
+        time.sleep(3)
+        title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text
+        print("Title: " + title)
         print("*")
-        print("Date: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text)
+        date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
+        print("Date: " + date)
         print("*")
-        print("Content: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text)
+        content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text
+        print("Content: " + content)
         print("*")
-        print("Stock Name: " + browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text)
-        print("*")
-        src = browser.page_source
-        ind = src.find('data-tlb-value')
-        ind2 = src.find('\"', ind + 17)
-        print("Stock Index: " + src[ind + 16:ind2])
+
+        stock_name = ""
+        stock_index = ""
+        try:
+            stock_name = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text
+            print("Stock Name: " + stock_name)
+            print("*")
+            src = browser.page_source
+            ind = src.find('data-tlb-value')
+            ind2 = src.find('\"', ind + 17)
+            stock_index = src[ind + 16:ind2]
+            print("Stock Index: " + stock_index)
+        except:
+            print("no stock info found")
         print("*")
         print("Current PAGE: " + str(currentpage) +" : " +str(current_url_index))
+        arr_titles.append(str(title))
+        arr_dates.append(str(date))
+        arr_contents.append(str(content))
+        arr_stock_names.append(str(stock_name))
+        arr_stock_indexes.append(str(stock_index))
+        arr_page_nums.append(str(currentpage))
         current_url_index += 1
 
+my_df = {'URL': arr_urls,
+         'Title': arr_titles,
+         'Date': arr_dates,
+         'Content': arr_contents,
+         'Stock Name': arr_stock_names,
+         'Stock Index': arr_stock_indexes,
+         'Current Page': arr_page_nums}
 
+df = pd.DataFrame(my_df)
+print('DataFrame:\n', df)
+gfg_csv_data = df.to_csv('borsait.csv', index = False)
+print('\nCSV String:\n', gfg_csv_data)
+
+print (df)
 
