@@ -28,6 +28,7 @@ browser.set_window_size(444,444)
 arr_urls = []
 arr_titles = []
 arr_dates = []
+arr_topics = []
 arr_contents = []
 arr_stock_names = []
 arr_stock_indexes = []
@@ -36,8 +37,8 @@ arr_page_nums = []
 currentitem = 2
 
 currentpage = 1
-while currentpage < 4:
-    browser.get("https://www.teleborsa.it/News/Home.aspx?k=news_italia&p=" + str(currentpage))
+while currentpage < 1400:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-06-18&to=2020-09-18&k=news_italia&p=" + str(currentpage))
 
     while currentitem < 17:
         url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
@@ -54,6 +55,7 @@ for x in arr_urls:  # urlleri dolaş
 
     browser.get(x)
     print("\n\npageURL: " + x)
+    currenttopic = 0
     if(str(x).__contains__("-video-")):
         time.sleep(3)
         title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text
@@ -61,6 +63,9 @@ for x in arr_urls:  # urlleri dolaş
         print("*")
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
         print("Date: " + date)
+        print("*")
+        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')[0].text
+        print("Topic: " + topic[0:topic.find('·') - 1])
         print("*")
         content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text
         print("Content: " + content)
@@ -81,9 +86,10 @@ for x in arr_urls:  # urlleri dolaş
             print("no stock info found")
 
         print("*")
-        print("Current PAGE: " + str(currentpage) + " : " + str(current_url_index))
+        print("Total Page" + " Current News Order: " + str(currentpage) + " : " + str(current_url_index))
         arr_titles.append(str(title))
         arr_dates.append(str(date))
+        arr_topics.append(str(topic))
         arr_contents.append(str(content))
         arr_stock_names.append(str(stock_name))
         arr_stock_indexes.append(str(stock_index))
@@ -96,6 +102,9 @@ for x in arr_urls:  # urlleri dolaş
         print("*")
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
         print("Date: " + date)
+        print("*")
+        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')[0].text
+        print("Topic: " + topic[0:topic.find('·') - 1])
         print("*")
         content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text
         print("Content: " + content)
@@ -115,9 +124,10 @@ for x in arr_urls:  # urlleri dolaş
         except:
             print("no stock info found")
         print("*")
-        print("Current PAGE: " + str(currentpage) +" : " +str(current_url_index))
+        print("Total Page" + " Current News Order: " + str(currentpage) +" : " +str(current_url_index))
         arr_titles.append(str(title))
         arr_dates.append(str(date))
+        arr_topics.append(str(topic))
         arr_contents.append(str(content))
         arr_stock_names.append(str(stock_name))
         arr_stock_indexes.append(str(stock_index))
@@ -127,6 +137,7 @@ for x in arr_urls:  # urlleri dolaş
 my_df = {'URL': arr_urls,
          'Title': arr_titles,
          'Date': arr_dates,
+         'Topic': arr_topics,
          'Content': arr_contents,
          'Stock Name': arr_stock_names,
          'Stock Index': arr_stock_indexes,
@@ -134,8 +145,7 @@ my_df = {'URL': arr_urls,
 
 df = pd.DataFrame(my_df)
 print('DataFrame:\n', df)
-gfg_csv_data = df.to_csv('borsait.csv', index = False)
-print('\nCSV String:\n', gfg_csv_data)
+teleborsa1400_csv_data = df.to_csv('teleborsa1400.csv', index = False)
+print('\nCSV String:\n', teleborsa1400_csv_data)
 
 print (df)
-
