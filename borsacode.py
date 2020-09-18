@@ -64,8 +64,13 @@ for x in arr_urls:  # urlleri dolaş
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
         print("Date: " + date)
         print("*")
-        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')[0].text
-        print("Topic: " + topic[0:topic.find('·') - 1])
+        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')
+        if type(topic) is list:
+            topic=topic[0].text
+            topic = topic[0:topic.find('·') - 1]
+        else:
+            topic = "No topic"
+        print("Topic: " + topic)
         print("*")
         content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text
         print("Content: " + content)
@@ -103,8 +108,13 @@ for x in arr_urls:  # urlleri dolaş
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
         print("Date: " + date)
         print("*")
-        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')[0].text
-        print("Topic: " + topic[0:topic.find('·') - 1])
+        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')
+        if type(topic) is list:
+            topic=topic[0].text
+            topic = topic[0:topic.find('·') - 1]
+        else:
+            topic = "No topic"
+        print("Topic: " + topic)
         print("*")
         content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]').text
         print("Content: " + content)
