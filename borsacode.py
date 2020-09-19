@@ -28,6 +28,9 @@ browser = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=op
 browser.set_window_size(444,444)
 
 
+
+
+
 arr_urls = []
 arr_titles = []
 arr_dates = []
@@ -39,9 +42,9 @@ arr_page_nums = []
 
 currentitem = 2
 
-currentpage = 12
-while currentpage < 13:
-    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-16&to=2020-09-18&k=news_italia&p=" + str(currentpage))
+currentpage = 1
+while currentpage < 6:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-01&to=2020-09-19&k=news_italia&p=" + str(currentpage))
 
     while currentitem < 17:
         url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
@@ -59,8 +62,8 @@ for x in arr_urls:  # urlleri dolaş
     browser.get(x)
     print("\n\npageURL: " + x)
     currenttopic = 0
-    if(str(x).__contains__("-video-")):
-        time.sleep(3)
+    if(str(x).__contains__("-video-") or str(x).__contains__("/Video/")):
+        time.sleep(5)
         title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text
         print("Title: " + title)
         print("*")
@@ -111,7 +114,7 @@ for x in arr_urls:  # urlleri dolaş
         arr_page_nums.append(str(currentpage))
         current_url_index += 1
     else:
-        time.sleep(3)
+        time.sleep(5)
         title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text
         print("Title: " + title)
         print("*")
@@ -165,7 +168,7 @@ my_df = {'URL': arr_urls,
 
 df = pd.DataFrame(my_df)
 print('DataFrame:\n', df)
-teleborsa18sep_csv_data = df.to_csv('teleborsa18sep', index = False)
-print('\nCSV String:\n', teleborsa18sep_csv_data)
+teleborsasep_csv_data = df.to_csv('teleborsasep_csv_data', index = False)
+print('\nCSV String:\n', teleborsasep_csv_data)
 
 print (df)
