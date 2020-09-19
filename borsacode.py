@@ -28,17 +28,6 @@ browser = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=op
 browser.set_window_size(444,444)
 
 
-# # arr_topics = []
-#
-# browser.get("https://www.teleborsa.it/Video/2020/09/18/buongiorno-dalla-borsa-18-settembre-2020-video-1.html#.X2TsImgzZPY")
-#
-# # currenttopic = 0
-# #
-# # while currenttopic < 7:
-
-
-
-
 arr_urls = []
 arr_titles = []
 arr_dates = []
