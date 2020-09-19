@@ -1,5 +1,6 @@
 import pandas as pd
 from selenium import webdriver
+import selenium
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,14 +15,27 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
 import urllib3
-import zipfile
 import csv
+import zipfile
+import time
+import pandas as pd
+
 
 
 option = webdriver.ChromeOptions()
 
 browser = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=option)
 browser.set_window_size(444,444)
+
+
+# # arr_topics = []
+#
+# browser.get("https://www.teleborsa.it/Video/2020/09/18/buongiorno-dalla-borsa-18-settembre-2020-video-1.html#.X2TsImgzZPY")
+#
+# # currenttopic = 0
+# #
+# # while currenttopic < 7:
+
 
 
 
@@ -36,9 +50,9 @@ arr_page_nums = []
 
 currentitem = 2
 
-currentpage = 1
-while currentpage < 1400:
-    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-06-18&to=2020-09-18&k=news_italia&p=" + str(currentpage))
+currentpage = 12
+while currentpage < 13:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-16&to=2020-09-18&k=news_italia&p=" + str(currentpage))
 
     while currentitem < 17:
         url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
@@ -64,12 +78,19 @@ for x in arr_urls:  # urlleri dolaş
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
         print("Date: " + date)
         print("*")
-        topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')
-        if type(topic) is list:
-            topic=topic[0].text
-            topic = topic[0:topic.find('·') - 1]
-        else:
+
+        try:
+            topic = browser.find_elements_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/div[1]/div[2]')
+            if type(topic) is list:
+                topic = topic[0].text
+                topic = topic[0:topic.find('·') - 1]
+            else:
+                topic = "No topic"
+        except:
             topic = "No topic"
+
+
+
         print("Topic: " + topic)
         print("*")
         content = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlBody"]').text
@@ -155,7 +176,7 @@ my_df = {'URL': arr_urls,
 
 df = pd.DataFrame(my_df)
 print('DataFrame:\n', df)
-teleborsa1400_csv_data = df.to_csv('teleborsa1400.csv', index = False)
-print('\nCSV String:\n', teleborsa1400_csv_data)
+teleborsa18sep_csv_data = df.to_csv('teleborsa18sep', index = False)
+print('\nCSV String:\n', teleborsa18sep_csv_data)
 
 print (df)
