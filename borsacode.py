@@ -42,9 +42,9 @@ arr_page_nums = []
 
 currentitem = 2
 
-currentpage = 1
-while currentpage < 6:
-    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-01&to=2020-09-19&k=news_italia&p=" + str(currentpage))
+currentpage = 23
+while currentpage < 25:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-01&to=2020-09-21&p=" + str(currentpage))
 
     while currentitem < 17:
         url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
@@ -54,7 +54,7 @@ while currentpage < 6:
 
     currentpage += 1
     currentitem = 2
-    time.sleep(3)
+    time.sleep(10)
 
 current_url_index = 1
 for x in arr_urls:  # urlleri dolaş
@@ -63,7 +63,7 @@ for x in arr_urls:  # urlleri dolaş
     print("\n\npageURL: " + x)
     currenttopic = 0
     if(str(x).__contains__("-video-") or str(x).__contains__("/Video/")):
-        time.sleep(5)
+        time.sleep(10)
         title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text
         print("Title: " + title)
         print("*")
@@ -114,8 +114,12 @@ for x in arr_urls:  # urlleri dolaş
         arr_page_nums.append(str(currentpage))
         current_url_index += 1
     else:
-        time.sleep(5)
-        title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text
+        time.sleep(10)
+
+        try:
+            title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text
+        except selenium.common.exceptions.NoSuchElementException or selenium.common.exceptions.TimeoutException:
+            continue
         print("Title: " + title)
         print("*")
         date = browser.find_element_by_xpath('//*[@id="ctl00_phContents_lblDataOra"]').text
@@ -168,7 +172,7 @@ my_df = {'URL': arr_urls,
 
 df = pd.DataFrame(my_df)
 print('DataFrame:\n', df)
-teleborsasep_csv_data = df.to_csv('teleborsasep_csv_data', index = False)
-print('\nCSV String:\n', teleborsasep_csv_data)
+teleborsadeneme12_csv_data = df.to_csv('teleborsadeneme12_csv_data', index = False)
+print('\nCSV String:\n', teleborsadeneme12_csv_data)
 
 print (df)
