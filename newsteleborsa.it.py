@@ -21,14 +21,10 @@ import time
 import pandas as pd
 
 
-
 option = webdriver.ChromeOptions()
 
 browser = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=option)
 browser.set_window_size(444,444)
-
-
-
 
 
 arr_urls = []
@@ -42,9 +38,9 @@ arr_page_nums = []
 
 currentitem = 2
 
-currentpage = 23
-while currentpage < 25:
-    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-01&to=2020-09-21&p=" + str(currentpage))
+currentpage = 1
+while currentpage < 100:
+    browser.get("https://www.teleborsa.it/News/Home.aspx?from=2020-09-01&to=2020-09-30&k=news_italia&p=" + str(currentpage))
 
     while currentitem < 17:
         url = browser.find_element_by_xpath('//*[@id="ctl00_phContents_GridView1"]/tbody/tr[' + str(currentitem) + ']/td/div/div[1]/a').get_attribute('href')
@@ -54,8 +50,8 @@ while currentpage < 25:
 
     currentpage += 1
     currentitem = 2
-    time.sleep(10)
 
+    time.sleep(7)
 current_url_index = 1
 for x in arr_urls:  # urlleri dolaş
 
@@ -63,7 +59,8 @@ for x in arr_urls:  # urlleri dolaş
     print("\n\npageURL: " + x)
     currenttopic = 0
     if(str(x).__contains__("-video-") or str(x).__contains__("/Video/")):
-        time.sleep(10)
+        title = ""
+        time.sleep(7)
         title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlContainer"]/h1').text
         print("Title: " + title)
         print("*")
@@ -114,11 +111,19 @@ for x in arr_urls:  # urlleri dolaş
         arr_page_nums.append(str(currentpage))
         current_url_index += 1
     else:
-        time.sleep(10)
-
+        time.sleep(6)
+        title = ""
         try:
             title = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNews"]/h1').text
         except selenium.common.exceptions.NoSuchElementException or selenium.common.exceptions.TimeoutException:
+            
+            arr_titles.append("Editore")
+            arr_dates.append("Editore")
+            arr_topics.append("Editore")
+            arr_contents.append("Editore")
+            arr_stock_names.append("Editore")
+            arr_stock_indexes.append("Editore")
+            arr_page_nums.append("Editore")
             continue
         print("Title: " + title)
         print("*")
@@ -139,6 +144,7 @@ for x in arr_urls:  # urlleri dolaş
 
         stock_name = ""
         stock_index = ""
+        #burası da doğru
         try:
             stock_name = browser.find_element_by_xpath('//*[@id="ctl00_phContents_pnlNewsBody"]/a/span').text
             print("Stock Name: " + stock_name)
@@ -161,6 +167,7 @@ for x in arr_urls:  # urlleri dolaş
         arr_page_nums.append(str(currentpage))
         current_url_index += 1
 
+
 my_df = {'URL': arr_urls,
          'Title': arr_titles,
          'Date': arr_dates,
@@ -170,9 +177,12 @@ my_df = {'URL': arr_urls,
          'Stock Index': arr_stock_indexes,
          'Current Page': arr_page_nums}
 
+print("Numbers:")
+print(str(len(arr_urls)) + "\n" + str(len(arr_titles)) +"\n" + str(len(arr_dates)) + "\n" + str(len(arr_topics)) + "\n" + str(len(arr_contents)) + "\n" + str(len(arr_stock_names)) + "\n" + str(len(arr_stock_indexes)) + "\n" + str(len(arr_page_nums)))
+
 df = pd.DataFrame(my_df)
 print('DataFrame:\n', df)
-teleborsadeneme12_csv_data = df.to_csv('teleborsadeneme12_csv_data', index = False)
-print('\nCSV String:\n', teleborsadeneme12_csv_data)
+new5teleborsadeneme1_csv_data = df.to_csv('new5teleborsadeneme1_csv_data', index = False)
+print('\nCSV String:\n', new5teleborsadeneme1_csv_data)
 
 print (df)
