@@ -18,8 +18,7 @@ import urllib3
 import zipfile
 import csv
 
-# csv yapılacak  arr_Ftse.append(str(Ftse))
-# NameError: name 'Ftse' is not defined hatas
+
 
 option = webdriver.ChromeOptions()
 
