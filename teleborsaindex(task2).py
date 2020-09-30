@@ -71,4 +71,3 @@ teleborsaindexs_csv_data = df.to_csv('teleborsaindexs_csv_data', index = False, 
 print('\nCSV String:\n', teleborsaindexs_csv_data)
 
 print (df)
-
