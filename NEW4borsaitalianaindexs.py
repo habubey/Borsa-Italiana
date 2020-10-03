@@ -91,6 +91,7 @@ while cur_char < len(arr_letters):
         current_row = 1
         while current_row <= total_urls:
             stock_url = browser.find_element_by_xpath("//*[@id=\"fullcontainer\"]/main/section/div[3]/article[1]/div[2]/div[1]/div[2]/table/tbody/tr["+ str(current_row + 2) +"]/td[1]/article/div[1]/a").get_attribute('href')
+            arr_urls.append(stock_url)
             print("Stock URL: " + stock_url)
             current_row += 1
 
