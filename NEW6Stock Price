@@ -1,0 +1,119 @@
+import yfinance as yf
+from pandas_datareader import data as pdr
+import pandas as pd
+from selenium import webdriver
+import selenium
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import requests
+import urllib3
+import csv
+import zipfile
+import time
+import pandas as pd
+import pandas_datareader as pdr
+import matplotlib.pyplot as plt
+import seaborn
+import datetime
+from pandas_datareader import data as pdr
+from yahoo_fin.stock_info import get_data
+from datetime import timedelta
+from dateutil import parser
+def getClosestDate(date, dates):
+    print(str(len(dates)) + " is the size")
+    smallest_date = date - timedelta(seconds=24*60*60*6)
+    index = -1
+    for i in range(len(dates)):
+
+
+        cur_date = dates["Open"].keys()[i].replace(tzinfo=None)
+
+        if cur_date <= date:
+            if cur_date > smallest_date:
+                smallest_date = cur_date
+                index = i
+
+    print(str(smallest_date) + " is the smallest date")
+    return index
+# for value in dates:
+# print(value.keys()[0])
+
+
+
+
+data_xls = pd.read_excel('part1done.xlsx', 'part1done', dtype=str, index_col=None)
+data_xls.to_csv('part1done.csv', encoding='utf-8', index=False)
+df = pd.read_csv('part1done.csv')
+print(df)
+
+#
+datetime.datetime.strptime(df['Date'][0], "%Y-%m-%d %H:%M:%S")
+
+datetime.datetime(2020, 9, 30, 13, 49)
+
+
+dates = [datetime.datetime.strptime(df['Date'][i], "%Y-%m-%d %H:%M:%S") for i in range(len(df))]
+
+df['Date'] = dates
+stockdatas = []
+stock_values = []
+stock_values_15p = []
+stock_values_30p = []
+stock_values_45p = []
+
+# data_yahoo = yf.download(df['Indexs'][1] + '.MI',
+#                      start=df['Date'][1],
+#                      end=df['Date'][1]+timedelta(seconds=3600*1),
+#                      interval='1m')
+# print(df['Date'][1])
+# print(data_yahoo)
+
+
+
+for i in range(9):
+    print("i th " + str(i))
+    if df['Indexs'][i] == "-":
+        data_yahoo = "None"
+        stock_values.append("None")
+        stock_values_15p.append("None")
+        stock_values_30p.append("None")
+        stock_values_45p.append("None")
+
+    else:
+        data_yahoo = yf.download(df['Indexs'][i] + '.MI',
+                     start=df['Date'][i],
+                     end=df['Date'][i]+timedelta(seconds=3600 * 2),
+                     interval='1m')
+        #getClosestDate(df['Date'][i], data_yahoo))
+        try:
+            stock_values.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i], data_yahoo)])
+            stock_values_15p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=15), data_yahoo)])
+            stock_values_30p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=30), data_yahoo)])
+            stock_values_45p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=45), data_yahoo)])
+        except:
+            stock_values.append("None")
+            stock_values_15p.append("None")
+            stock_values_30p.append("None")
+            stock_values_45p.append("None")
+        print("Current Index " + df['Indexs'][i])
+        stockdatas.append(data_yahoo)
+df.insert(6, "Stock Value", stock_values)
+df.insert(7, "Stock Value + 15", stock_values_15p)
+df.insert(8, "Stock Value + 30", stock_values_30p)
+df.insert(9, "Stock Value + 45", stock_values_45p)
+
+# df.to_excel('yeniiii.xlsx', index = None, header=True)
+# df = pd.DataFrame(df)
+# print('DataFrame:\n', df)
+print('\nCSV String:\n', df)
+df.to_excel ('C:\\Users\BUĞRA\PycharmProjects\TestProject\stockss.xlsx', index = None, header=True)
