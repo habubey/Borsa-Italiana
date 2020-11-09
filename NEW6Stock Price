@@ -51,9 +51,9 @@ def getClosestDate(date, dates):
 
 
 
-data_xls = pd.read_excel('part1done.xlsx', 'part1done', dtype=str, index_col=None)
-data_xls.to_csv('part1done.csv', encoding='utf-8', index=False)
-df = pd.read_csv('part1done.csv')
+data_xls = pd.read_excel('part2deneme.xlsx', 'Sayfa1', dtype=str, index_col=None)
+data_xls.to_csv('part2deneme.csv', encoding='utf-8', index=False)
+df = pd.read_csv('part2deneme.csv')
 print(df)
 
 #
@@ -70,6 +70,7 @@ stock_values = []
 stock_values_15p = []
 stock_values_30p = []
 stock_values_45p = []
+date_of_values = []
 
 # data_yahoo = yf.download(df['Indexs'][1] + '.MI',
 #                      start=df['Date'][1],
@@ -80,10 +81,11 @@ stock_values_45p = []
 
 
 
-for i in range(9):
+for i in range(1311):
     print("i th " + str(i))
     if df['Indexs'][i] == "-":
         data_yahoo = "None"
+        date_of_values.append("None")
         stock_values.append("None")
         stock_values_15p.append("None")
         stock_values_30p.append("None")
@@ -91,29 +93,34 @@ for i in range(9):
 
     else:
         data_yahoo = yf.download(df['Indexs'][i] + '.MI',
-                     start=df['Date'][i],
-                     end=df['Date'][i]+timedelta(seconds=3600 * 2),
+                     start=df['Date'][i] - timedelta(seconds=3600 * 24),
+                     end=df['Date'][i]+timedelta(seconds=3600 * 24),
                      interval='1m')
         #getClosestDate(df['Date'][i], data_yahoo))
         try:
+            index = getClosestDate(df['Date'][i], data_yahoo)
+            date_of_values.append(data_yahoo["Open"].keys()[index].replace(tzinfo=None))
             stock_values.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i], data_yahoo)])
             stock_values_15p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=15), data_yahoo)])
             stock_values_30p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=30), data_yahoo)])
             stock_values_45p.append(data_yahoo["Close"].values[getClosestDate(df['Date'][i] + timedelta(minutes=45), data_yahoo)])
         except:
+            date_of_values.append("None")
             stock_values.append("None")
             stock_values_15p.append("None")
             stock_values_30p.append("None")
             stock_values_45p.append("None")
         print("Current Index " + df['Indexs'][i])
+
         stockdatas.append(data_yahoo)
 df.insert(6, "Stock Value", stock_values)
 df.insert(7, "Stock Value + 15", stock_values_15p)
 df.insert(8, "Stock Value + 30", stock_values_30p)
 df.insert(9, "Stock Value + 45", stock_values_45p)
+df.insert(6, "Date of Value", date_of_values)
 
 # df.to_excel('yeniiii.xlsx', index = None, header=True)
 # df = pd.DataFrame(df)
 # print('DataFrame:\n', df)
 print('\nCSV String:\n', df)
-df.to_excel ('C:\\Users\BUĞRA\PycharmProjects\TestProject\stockss.xlsx', index = None, header=True)
+df.to_excel ('C:\\Users\BUĞRA\PycharmProjects\TestProject\part3yeniii.xlsx', index = None, header=True)
