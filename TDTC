@@ -1,0 +1,47 @@
+
+option = webdriver.ChromeOptions()
+browser = webdriver.Chrome(executable_path="chromedriver1.exe")
+
+browser.set_window_size(555,555)
+arr_companynames = []
+arr_companywebsites = []
+arr_emails = []
+
+browser.get("https://www.askturkiye.com/en/sectorfirms/turkish-animal-products-seafood")
+# ********************************BURASI CIKIYOR*************
+# ********************************BURASI CIKIYOR*************
+# cur = 1
+# while cur < 188:
+#     companyname = browser.find_element_by_xpath("//*[@id=\"main\"]/section/div/div/div/div[2]/div/div[" + str(cur) + "]/div/div[2]").text
+#
+#     print("Company Name: " + companyname)
+#     cur += 1
+# *********************************BURASI CIKIYOR************
+# *********************************BURASI CIKIYOR************
+# cura = 1
+# while cura < 188:
+#     try:
+#         website = browser.find_element_by_xpath("//*[@id=\"main\"]/section/div/div/div/div[2]/div/div[" + str(cura) + "]/div/div[3]/div/div[1]/a/span").text
+#
+#         print(website)
+#         cura += 1
+#
+#     except:
+#         print("No Website")
+#         cura += 1
+# *********************************BURASI CIKIYOR************
+# ********************************BURASI CIKIYOR*************
+
+# curo = 1
+# while curo < 188:
+#     try:
+#         email = browser.find_element_by_xpath("//*[@id=\"main\"]/section/div/div/div/div[2]/div/div[" + str(curo) + "]/div/div[3]/div/div[2]/span").text
+#
+#         print(email)
+#         curo += 1
+#
+#     except:
+#         print("no e-mail found")
+#         curo += 1
+# *********************************BURASI CIKIYOR************
+# ********************************BURASI CIKIYOR*************
