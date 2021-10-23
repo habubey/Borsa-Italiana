@@ -1,0 +1,80 @@
+import yfinance as yf
+from arch import arch_model
+from arch.__future__ import reindexing
+import math
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import scipy
+import numpy as np
+import scipy
+import pandas as pd
+from arch import arch_model
+
+# ticker= "LD.MI"
+# stock_data = yf.download(ticker, start="2020-01-06", end="2020-08-3")
+
+# stock_data['Return'] = 100 * (stock_data['Close'].pct_change())
+
+# stock_data.dropna(inplace=True)
+
+# fig = plt.figure()
+# fig.set_figwidth(12)
+# plt.plot(stock_data['Return'], label = 'Daily Returns')
+# plt.legend(loc='upper right')
+# plt.title('La Doria Daily Returns Over Time')
+# plt.show()
+
+# daily_volatility = stock_data['Return'].std()
+# print('Daily volatility: ', '{:.2f}%'.format(daily_volatility))
+
+# monthly_volatility = math.sqrt(21) * daily_volatility
+# print ('Monthly volatility: ', '{:.2f}%'.format(monthly_volatility))
+
+# annual_volatility = math.sqrt(252) * daily_volatility
+# print ('Annual volatility: ', '{:.2f}%'.format(annual_volatility ))
+
+# print("******************************")
+
+# garch_model = arch_model(stock_data['Return'], p = 1, q = 1,
+                      # mean = 'constant', vol = 'GARCH', dist = 'normal')
+
+# gm_result = garch_model.fit(disp='off')
+# print(gm_result.params)
+
+# print("sonnonono******************************")
+
+import pandas_datareader as pdr
+import datetime as dt
+
+
+import pandas_datareader as pdr
+import datetime as dt
+
+ticker = "LD.MI"
+start = dt.datetime(2020, 1, 1)
+end = dt.datetime(2020, 8, 3)
+
+data = pdr.get_data_yahoo(ticker, start, end)
+
+print(data.head())
+
+import numpy as np
+
+data['Log returns'] = np.log(data['Close']/data['Close'].shift())
+
+
+data['Log returns'].std()
+
+volatility = data['Log returns'].std()*21**.5
+
+str_vol = str(round(volatility, 4)*100)
+
+
+fig, ax = plt.subplots()
+
+data['Log returns'].hist(ax=ax, bins=50, alpha=0.6, color='b')
+ax.set_xlabel("Log return")
+ax.set_ylabel("Freq of log return")
+ax.set_title("La Doria Monthly Volatility: " + str_vol + "%")
+plt.show()
